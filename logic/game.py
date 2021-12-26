@@ -1,14 +1,16 @@
 import pygame
 from .utils import *
 from .map import *
+# from .objects import *
 
 pygame.init()
 CLOCK = pygame.time.Clock()
-SCREEN = pygame.display.set_mode((640, 360), pygame.FULLSCREEN | pygame.SCALED)
+SCREEN = pygame.display.set_mode((320, 180), pygame.FULLSCREEN | pygame.SCALED)
 
 tilemap = TileMap("prototype", "sprites/tilemap")
+# player = Player
 
-SCROLL = pygame.math.Vector2(0, 0)
+state = "game"
 
 
 def main():
@@ -16,16 +18,16 @@ def main():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
-                exit()
+                raise SystemExit
 
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     pygame.quit()
-                    exit()
+                    raise SystemExit
         
         SCREEN.fill("black")
-        # SCREEN.blit(tilemap, (0, 0))
-        tilemap.draw_map(SCREEN, (0, 0) + SCROLL)
+        tilemap.draw_map(SCREEN, (0, 0))
+        # tilemap.debug(SCREEN, (0, 0))
         
         pygame.display.update()
         CLOCK.tick(60)

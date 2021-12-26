@@ -20,35 +20,24 @@ class Tile:
                           int(tile_nr) // tiles_on_row * tile_size[1]), tile_size
                          )
 
-    def draw(self, surface):
-        surface.blit(self.surf, self.pos)
+    def draw(self, surface, pos):
+        surface.blit(self.surf, self.pos + pos)
 
     def get_rect(self):
-        rect = self.surf.get_rect()
-        rect.topleft = self.pos
+        rect = self.surf.get_rect(topleft=self.pos)
         return rect
 
 
 class TileMap:
-    def __init__(self, filename, sprite_sheet, scale=2, tile_size=(16, 16)):
+    def __init__(self, filename, sprite_sheet, scale=1, tile_size=(16, 16)):
         self.path = filename
-        self.sprite_sheet = load_image(sprite_sheet)
-
-        self.sprite_sheet = scale_surf(self.sprite_sheet, scale)
+        self.sprite_sheet = load_image(sprite_sheet, alpha=True, scale=scale)
 
         self.tile_size = (tile_size[0] * scale, tile_size[1] * scale)
 
         self.tiles = []
         map_ = self.read_csv()
         self.load_tiles(map_)
-
-        map_surface_ = pygame.surface.Surface((len(map_[0]) * self.tile_size[0], len(map_) * self.tile_size[1]))
-        self.map_surface = map_surface_.copy()
-        self.load_map(map_surface_)
-        map_surface_.set_colorkey((255, 0, 0))
-
-        self.map_surface.blit(map_surface_, (0, 0))
-        self.map_surface.set_colorkey((0, 0, 0))
 
         self.rects = [i.get_rect() for i in self.tiles]
 
@@ -70,12 +59,10 @@ class TileMap:
                 x += 1
             y += 1
 
-    def load_map(self, map_surface_):
+    def draw_map(self, screen, pos):
         for tile in self.tiles:
-            tile.draw(map_surface_)
-
-    def draw_map(self, surface, pos):
-        surface.blit(self.map_surface, pos)
+            if tile.get_rect().colliderect(screen.get_rect()):
+                tile.draw(screen, pos)
 
     def get_rects(self):
         return self.rects

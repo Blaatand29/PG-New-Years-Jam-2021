@@ -5,7 +5,8 @@ __all__ = [
     "scale_surf",
     "rotate_surf",
     "clip",
-    "clamp"
+    "clamp",
+    "load_animation"
 ]
 
 import pygame
@@ -15,7 +16,7 @@ DIR = pathlib.Path(__file__).parent.parent
 ASSETS = DIR / "assets"
 
 
-def load_image(name, scale: int = 1, alpha: bool = False):
+def load_image(name, scale=1, alpha=False):
     image = pygame.image.load(ASSETS / f"{name}.png")
     if scale != 1:
         image = scale_surf(image, scale)
@@ -49,3 +50,11 @@ def clamp(value, mini, maxi):
         return maxi
     else:
         return value
+
+
+def load_animation(name, width, alpha=True, scale=1):
+    sheet = load_image(name, alpha=alpha, scale=scale)
+    animation = []
+    for i in range(sheet.get_width() // width):
+        animation.append(clip(sheet, (i * width, 0), (width, sheet.get_height())))
+    return animation
