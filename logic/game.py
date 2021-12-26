@@ -17,10 +17,15 @@ def main():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 exit()
+
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    pygame.quit()
+                    exit()
         
         SCREEN.fill("black")
         # SCREEN.blit(tilemap, (0, 0))
-        tilemap.draw_map(SCREEN, (0, 0))
+        tilemap.draw_map(SCREEN, (0, 0) + SCROLL)
         
         pygame.display.update()
         CLOCK.tick(60)
