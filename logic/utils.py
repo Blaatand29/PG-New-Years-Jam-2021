@@ -5,7 +5,8 @@ __all__ = [
     "scale_surf",
     "rotate_surf",
     "clip",
-    "clamp"
+    "clamp",
+    "text"
 ]
 
 import pygame
@@ -49,3 +50,7 @@ def clamp(value, mini, maxi):
         return maxi
     else:
         return value
+
+
+def text(msg):
+    return pygame.font.SysFont('system', 50).render(msg, False, (255, 255, 255))

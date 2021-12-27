@@ -1,19 +1,26 @@
 import pygame
 from .utils import *
 from .map import *
+from .background import *
+from .config import *
+from .objects import *
 
 pygame.init()
-CLOCK = pygame.time.Clock()
-SCREEN = pygame.display.set_mode((640, 360), pygame.FULLSCREEN | pygame.SCALED)
+CLOCK = Clock()
+SCREEN = pygame.display.set_mode((screen_width, screen_height), pygame.FULLSCREEN | pygame.SCALED)
 
 tilemap = TileMap("prototype", "sprites/tilemap")
 
 SCROLL = pygame.math.Vector2(0, 0)
 
+background = Background()
+
 
 def main():
+    dt = 1
     while True:
-        for event in pygame.event.get():
+        events = pygame.event.get()
+        for event in events:
             if event.type == pygame.QUIT:
                 pygame.quit()
                 exit()
@@ -22,10 +29,16 @@ def main():
                 if event.key == pygame.K_ESCAPE:
                     pygame.quit()
                     exit()
-        
+                if event.key == pygame.K_RETURN:
+                    pass
+                    # slow_mo()
+
         SCREEN.fill("black")
         # SCREEN.blit(tilemap, (0, 0))
-        tilemap.draw_map(SCREEN, (0, 0) + SCROLL)
-        
+        background.update(dt)
+        background.draw(SCREEN)
+        tilemap.draw_map(SCREEN, pygame.Vector2(0, 0) + SCROLL)
+        CLOCK.show(SCREEN)
         pygame.display.update()
-        CLOCK.tick(60)
+        CLOCK.update(events)
+        dt = CLOCK.dt
